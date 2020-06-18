@@ -51,6 +51,14 @@ class UserActionsTest extends TestCase
         $this->assertEquals('another@domain.com', $user->email());
     }
 
+    public function testChangeEmailWithUmlaut()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeEmail('test@exämple.com');
+
+        $this->assertEquals('test@xn--exmple-cua.com', $user->email());
+    }
+
     public function testChangeLanguage()
     {
         $user = $this->app->user('editor@domain.com');
@@ -93,6 +101,19 @@ class UserActionsTest extends TestCase
         $this->assertTrue($user->exists());
 
         $this->assertEquals('new@domain.com', $user->email());
+        $this->assertEquals('admin', $user->role());
+    }
+
+    public function testCreateUserWithUmlautEmail()
+    {
+        $user = User::create([
+            'email' => 'test@exämple.com',
+            'role'  => 'admin',
+        ]);
+
+        $this->assertTrue($user->exists());
+
+        $this->assertEquals('test@xn--exmple-cua.com', $user->email());
         $this->assertEquals('admin', $user->role());
     }
 

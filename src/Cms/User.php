@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Session\Session;
+use Kirby\Http\Idn;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -242,6 +242,24 @@ class User extends ModelWithContent
     public function email(): ?string
     {
         return $this->email = $this->email ?? $this->credentials()['email'] ?? null;
+    }
+
+    /**
+     * Encode a user email address
+     *
+     * @param string $email
+     * @return string
+     */
+    public static function encodeEmail(string $email)
+    {
+        if (mb_detect_encoding($email, 'ASCII', true) === false) {
+            $parts = Str::split($email, '@');
+            $address = $parts[0] ?? null;
+            $domain = Idn::encode($parts[1] ?? '');
+            $email = $address . '@' . $domain;
+        }
+
+        return $email;
     }
 
     /**
