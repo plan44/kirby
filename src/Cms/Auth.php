@@ -211,7 +211,7 @@ class Auth
         ];
 
         // validate the user and log in to the session
-        $user = $this->validatePassword($email, $password);
+        $user = $this->validatePassword(User::encodeEmail($email), $password);
         $user->loginPasswordless($options);
 
         return $user;
