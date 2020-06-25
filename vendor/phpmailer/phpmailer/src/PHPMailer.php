@@ -2312,12 +2312,13 @@ class PHPMailer
                 }
             }
         } else {
-            if (count($this->to) > 0) {
-                if ('mail' != $this->Mailer) {
+            // fix 2020-06-25 by luz: suppress not only regular but also 'undisclosed-recipients:;' "To:" header generation when using mail()
+            if ('mail' != $this->Mailer) {
+                if (count($this->to) > 0) {
                     $result .= $this->addrAppend('To', $this->to);
+                } elseif (count($this->cc) == 0) {
+                    $result .= $this->headerLine('To', 'undisclosed-recipients:;');
                 }
-            } elseif (count($this->cc) == 0) {
-                $result .= $this->headerLine('To', 'undisclosed-recipients:;');
             }
         }
 

@@ -19,7 +19,7 @@ class PHPMailer extends Email
     public function send(bool $debug = false): bool
     {
         $mailer = new Mailer(true);
-
+        
         // set sender's address
         $mailer->setFrom($this->from(), $this->fromName() ?? '');
 
@@ -71,6 +71,13 @@ class PHPMailer extends Email
             return $this->isSent = true;
         }
 
-        return $this->isSent = $mailer->send();
+        //return $this->isSent = $mailer->send();
+        $this->isSent = $mailer->send();
+        $log = fopen('/home/gleistld/public_html/g70applogs/phpmailer.log', 'a');
+        fwrite($log, "\n\n============ raw mail sent (type=" . ($this->transport()['type'] ?? 'mail') . ")" . strftime("%Y-%m-%d %H:%M") . "===========\n\n");
+        fwrite($log, $mailer->getSentMIMEMessage());
+        fwrite($log, "\n\n============ mailer = " . var_export($mailer, true) . "\n==============\n");
+        fclose($log);
+        return $this->isSent;
     }
 }
