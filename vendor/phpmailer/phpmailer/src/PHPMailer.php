@@ -1704,21 +1704,6 @@ class PHPMailer
             ini_set('sendmail_from', $this->Sender);
         }
         $result = false;
-        
-        /*
-        $log = fopen('/home/gleistld/public_html/g70applogs/phpmailer.log', 'a');
-        fwrite($log, "\n============ mailSend:\n");
-        fwrite($log, "\n--- To      : " . $to . "\n");
-        fwrite($log, "\n--- Subject : " . $this->Subject . "\n");
-        fwrite($log, "\n--- body    : " . $body . "\n");
-        fwrite($log, "\n--- header  : " . $header . "\n");
-        fwrite($log, "\n--- params  : " . var_export($params, true) . "\n");
-        fwrite($log, "\n--- SingleTo: " . $this->SingleTo . "\n");
-        fwrite($log, "\n--- Count(ToArr) : " . count($toArr) . "\n");
-        fwrite($log, "\n============\n\n");
-        fclose($log);
-        */
-        
         if ($this->SingleTo and count($toArr) > 1) {
             foreach ($toArr as $toAddr) {
                 $result = $this->mailPassthru($toAddr, $this->Subject, $body, $header, $params);
